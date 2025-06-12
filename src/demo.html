@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body style="background-color: #fff; padding: 20px 50px">
+    <div
+      style="
+        width: 90%;
+
+        margin: auto;
+        padding: 40px;
+        background-color: #475467;
+      "
+    >
+      <div
+        width="100px"
+        style="
+          border-radius: 50px;
+          margin-top: 30px;
+          margin: auto;
+          background-position: center;
+          background-size: contain;
+          height: 120px;
+
+          background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255331/Screenshot_2024-08-10_at_01.12.19_1_uc1j5p.png);
+          background-repeat: no-repeat;
+        "
+      ></div>
+      <div
+        style="
+          color: #fff;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 800;
+          margin: auto;
+          margin-top: 20px;
+        "
+      >
+        FHA RENEWED HOPE ESTATES
+      </div>
+    </div>
+
+    <div style="margin: auto; padding: 0 3%">
+      <div style="padding: 36px 27px 0 27px">
+        <span style="color: #030812; font-size: 18px; font-weight: 800">
+          Hi ${user.first_name}
+          <svg
+            width="20"
+            height="21"
+            viewBox="0 0 20 21"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <rect
+              y="0.5"
+              width="20"
+              height="20"
+              fill="url(#pattern0_233_4400)"
+            />
+            <defs>
+              <pattern
+                id="pattern0_233_4400"
+                patternContentUnits="objectBoundingBox"
+                width="1"
+                height="1"
+              >
+                <use
+                  xlink:href="#image0_233_4400"
+                  transform="scale(0.0138889)"
+                />
+              </pattern>
+              <image
+                id="image0_233_4400"
+                width="72"
+                height="72"
+                xlink:href="data:image/png;base64,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"
+              />
+            </defs>
+          </svg>
+        </span>
+        <div
+          style="
+            margin-top: 14px;
+            color: #475467;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 19.6px;
+          "
+        >
+          Thank you for showing interest in our real estate platform and
+          submitting your basic information. We're excited to help you find your
+          ideal home!
+        </div>
+      </div>
+      <div style="padding: 24px 27px">
+        <span style="color: #030812; font-size: 14px; font-weight: 600">
+          Next Steps
+        </span>
+        <div
+          style="
+            margin-top: 16px;
+            color: #475467;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 19.6px;
+          "
+        >
+          To complete with your registration, please verify your account.
+        </div>
+        <div style="margin-top: 40px">
+          <a
+            style="
+              background-color: #338330;
+              text-decoration: none;
+              padding: 14px 24px;
+              color: #fff;
+              border-radius: 10px;
+              margin-top: 40px;
+            "
+            href="https://fhaestates.com/create-password/${token}"
+          >
+            Verify My Account
+          </a>
+        </div>
+        <div
+          style="
+            margin-top: 44px;
+            color: #475467;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 19.6px;
+          "
+        >
+          If you have any questions or need assistance, feel free to reach out
+          to our support team at support@renewedhopeestate.com or call us at
+          1-800-123-4567.
+        </div>
+        <div
+          style="
+            margin-top: 16px;
+            color: #475467;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 19.6px;
+          "
+        >
+          Thank you again for your interest. We look forward to helping you find
+          your perfect home!
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        margin: auto;
+        background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255584/Screenshot_2024-06-25_at_15.30.48_1_1_chlgqr.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 97px;
+        padding: 40px;
+        width: 90%;
+      "
+    >
+      <div
+        style="
+          color: #fff;
+          font-size: 14px;
+          text-align: center;
+          font-weight: 500;
+          z-index: 9999;
+        "
+      >
+        Connect with us via our Social Media:
+      </div>
+
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          align-items: center;
+          margin: auto;
+          z-index: 99999;
+          margin-top: 40px;
+        "
+      >
+        <div
+          style="
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <a style="margin: 0 20px" href="">
+            <div
+              style="
+                width: 24px;
+                height: 24px;
+                background-size: contain;
+                background-position: center;
+                background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255744/Dribbble_udceid.png);
+              "
+            ></div>
+          </a>
+
+          <a style="margin: 0 20px" href="">
+            <div
+              style="
+                width: 24px;
+                height: 24px;
+                background-size: contain;
+                background-position: center;
+                background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723258034/Instagram_h57zcn.png);
+              "
+            ></div>
+          </a>
+
+          <a style="margin: 0 20px" href="">
+            <div
+              style="
+                width: 24px;
+                height: 24px;
+                background-size: contain;
+                background-position: center;
+                background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723258097/Twitter_oryzgn.png);
+              "
+            ></div>
+          </a>
+
+          <a style="margin: 0 20px" href="">
+            <div
+              style="
+                width: 24px;
+                height: 24px;
+                background-size: contain;
+                background-position: center;
+                background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723258190/Youtube_t3ebfv.png);
+              "
+            ></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
