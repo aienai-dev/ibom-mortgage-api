@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for fha-api on 2025-05-25T19:24:40Z
+# fly.toml app configuration file generated for ibom-mortgage-api on 2025-06-12T16:43:35Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'fha-api'
+app = 'ibom-mortgage-api'
 primary_region = 'jnb'
 
 [build]
