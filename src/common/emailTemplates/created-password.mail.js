@@ -44,7 +44,7 @@ snippet: (user, token) =>
           border-radius: 10px;
           margin-top: 40px;
         "
-            href="https://fhaestates.com/create-password/${token}"
+            href="https://ibom-mortgage-ui.fly.dev/create-password/${token}"
           >
             Verify My Account
           </a>

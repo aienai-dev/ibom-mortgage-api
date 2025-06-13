@@ -14,7 +14,7 @@ const template = ({ user, token, content }) => {
 
         margin: auto;
         padding: 40px;
-        background-color: #475467;
+ 
       "
     >
       <div
@@ -27,13 +27,13 @@ const template = ({ user, token, content }) => {
           background-size: contain;
           height: 120px;
 
-          background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255331/Screenshot_2024-08-10_at_01.12.19_1_uc1j5p.png);
+          background-image: url(https://res.cloudinary.com/fullstack-login-register/image/upload/v1749817364/Screenshot_2025-06-12_at_14.02.54-removebg-preview_2_cqfmfv.png);
           background-repeat: no-repeat;
         "
       ></div>
       <div
         style="
-          color: #fff;
+         
           text-align: center;
           font-size: 18px;
           font-weight: 800;
@@ -41,7 +41,7 @@ const template = ({ user, token, content }) => {
           margin-top: 20px;
         "
       >
-        FHA RENEWED HOPE ESTATES
+       Welcome to IBOM MORTGAGE
       </div>
     </div>
 ${content.snippet(user, token)}

@@ -15,7 +15,7 @@ const sendSmtpEmail = new brevo.SendSmtpEmail({});
 const mailer = {
   sendCreatePassword: async (user, token) => {
     sendSmtpEmail.sender = {
-      email: "hello@fhaestates.com",
+      email: "hello@ibommortgage.com",
       name: "Vimo from AIENAI",
     };
     sendSmtpEmail.subject = `Welcome ${user.first_name} 👋 , Let's get you started! `;
@@ -34,8 +34,8 @@ const mailer = {
   },
   sendWelcome: async (user, token) => {
     sendSmtpEmail.sender = {
-      email: "hello@fhaestates.com",
-      name: "Welcome To FHA Estates",
+      email: "hello@ibommortgage.com",
+      name: "Welcome To IBOM Mortgage",
     };
     sendSmtpEmail.subject = `Thank You for Your Interest in Our Real Estate Platform!`;
     sendSmtpEmail.to = [
@@ -53,8 +53,8 @@ const mailer = {
   },
   sendResetPassword: async (user, token) => {
     sendSmtpEmail.sender = {
-      email: "hello@fhaestates.com",
-      name: "Welcome To FHA Estates",
+      email: "hello@ibommortgage.com",
+      name: "Welcome To IBOM Mortgage",
     };
     sendSmtpEmail.subject = `Dont remember your password?`;
     sendSmtpEmail.to = [
