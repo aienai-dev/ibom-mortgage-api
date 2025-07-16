@@ -94,7 +94,7 @@ const welcomeTemplate = {
         "
       >
         If you have any questions or need assistance, feel free to reach out
-        to our support team at support@renewedhopeestate.com or call us at
+        to our support team at support@ibommortgage or call us at
         1-800-123-4567.
       </div>
       <div

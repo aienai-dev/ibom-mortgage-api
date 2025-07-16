@@ -1,5 +1,5 @@
 const createPasswordTemplate = {
-snippet: (user, token) =>
+  snippet: (user, token) =>
     `<div style="margin: auto; padding: 0 3%">
       <div style="padding: 36px 27px 0 27px">
         <span style="color: #030812; font-size: 18px; font-weight: 800">
@@ -59,7 +59,7 @@ snippet: (user, token) =>
       "
         >
           If you have any questions or need assistance, feel free to reach out
-          to our support team at support@renewedhopeestate.com or call us at
+          to our support team at support@ibommortgage or call us at
           1-800-123-4567.
         </div>
         <div

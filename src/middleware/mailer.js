@@ -1,78 +1,113 @@
-// const mail = require("resend");
+const nodemailer = require('nodemailer');
 const welcomeTemplate = require("../common/emailTemplates/wecome.mail");
 const createPasswordTemplate = require("../common/emailTemplates/created-password.mail");
 const resetPasswordTemplate = require("../common/emailTemplates/reset-password.mail");
-var brevo = require("sib-api-v3-sdk");
 const template = require("../common/emailTemplates/template");
-var defaultClient = brevo.ApiClient.instance;
-const apiKey = defaultClient.authentications["api-key"];
-apiKey.apiKey = process.env.BREVO_API_KEY;
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+// SMTP Configuration
+const transporter = nodemailer.createTransport({
+  host: 'smtp.zoho.com',
+  port: 465, // SSL port
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: 'hello@fhaestates.com', // Your Zoho email address (e.g., info@ibommortgage.com)
+    pass: 'fhamortgageDev@dev123' // Your Zoho email password or app-specific password
+  },
+  tls: {
+    rejectUnauthorized: false // Only for testing, remove in production
+  }
+});
 
-const sendSmtpEmail = new brevo.SendSmtpEmail({});
+// Verify SMTP connection on startup
+transporter.verify((error) => {
+  if (error) {
+    console.error('SMTP connection error:', error);
+  } else {
+    console.log('SMTP server is ready to send emails');
+  }
+});
 
 const mailer = {
   sendCreatePassword: async (user, token) => {
-    sendSmtpEmail.sender = {
-      email: "hello@ibommortgage.com",
-      name: "Vimo from AIENAI",
-    };
-    sendSmtpEmail.subject = `Welcome ${user.first_name} 👋 , Let's get you started! `;
-    sendSmtpEmail.to = [
-      { email: user.email, name: user.first_name + " " + user.last_name },
-    ];
-    sendSmtpEmail.htmlContent = template({
-      user,
-      token,
-      content: createPasswordTemplate,
-    });
+    try {
+      const mailOptions = {
+        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        to: user.email,
+        subject: `Welcome ${user.first_name} 👋, Let's get you started!`,
+        html: template({
+          user,
+          token,
+          content: createPasswordTemplate,
+        })
+      };
 
-    const res = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    if (res.messageId) return { status: "success" };
-    else return { status: "failed" };
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId
+      };
+    } catch (error) {
+      console.error("Error sending create password email:", error);
+      return {
+        status: "failed",
+        error: error.message
+      };
+    }
   },
+
   sendWelcome: async (user, token) => {
-    sendSmtpEmail.sender = {
-      email: "hello@ibommortgage.com",
-      name: "Welcome To IBOM Mortgage",
-    };
-    sendSmtpEmail.subject = `Thank You for Your Interest in Our Real Estate Platform!`;
-    sendSmtpEmail.to = [
-      { email: user.email, name: user.first_name + " " + user.last_name },
-    ];
-    sendSmtpEmail.htmlContent = template({
-      user,
-      token,
-      content: welcomeTemplate,
-    });
+    try {
+      const mailOptions = {
+        from: `"Ibom Mortgage Initiative" <${process.env.ZOHO_EMAIL}>`,
+        to: user.email,
+        subject: "Thank You for Your Interest in Our Real Estate Platform!",
+        html: template({
+          user,
+          token,
+          content: welcomeTemplate,
+        })
+      };
 
-    const res = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    if (res.messageId) return { status: "success" };
-    else return { status: "failed" };
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId
+      };
+    } catch (error) {
+      console.error("Error sending welcome email:", error);
+      return {
+        status: "failed",
+        error: error.message
+      };
+    }
   },
+
   sendResetPassword: async (user, token) => {
-    sendSmtpEmail.sender = {
-      email: "hello@ibommortgage.com",
-      name: "Welcome To IBOM Mortgage",
-    };
-    sendSmtpEmail.subject = `Dont remember your password?`;
-    sendSmtpEmail.to = [
-      { email: user.email, name: user.first_name + " " + user.last_name },
-    ];
-    sendSmtpEmail.htmlContent = template({
-      user,
-      token,
-      content: resetPasswordTemplate,
-    });
+    try {
+      const mailOptions = {
+        from: `"Ibom Mortgage Initiative" <${process.env.ZOHO_EMAIL}>`,
+        to: user.email,
+        subject: "Don't remember your password?",
+        html: template({
+          user,
+          token,
+          content: resetPasswordTemplate,
+        })
+      };
 
-    const res = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    if (res.messageId) return { status: "success" };
-    else return { status: "failed" };
-  },
-  // test: async () => {
-
-  // },
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId
+      };
+    } catch (error) {
+      console.error("Error sending reset password email:", error);
+      return {
+        status: "failed",
+        error: error.message
+      };
+    }
+  }
 };
 
 module.exports = mailer;
