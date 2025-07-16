@@ -1,57 +1,3 @@
-// const dotevn = require("dotenv");
-// const cors = require("cors");
-// const morgan = require("morgan");
-// const express = require("express");
-// const db = require("./db/connection");
-// const authRoute = require("./routes/auth.route");
-// const usersRoute = require("./routes/users.route");
-
-// dotevn.config();
-
-// const PORT = process.env.PORT || 3000;
-
-// const app = express();
-// app.use(express.json());
-// app.use(cors());
-// app.use(morgan("tiny"));
-// app.disable("x-powered-by");
-
-// const corsOptions = {
-//   origin: "*",
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true,
-//   allowedHeaders: "Content-Type,Authorization,X-Requested-With,Accept",
-//   optionsSuccessStatus: 200,
-// };
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
-//   );
-//   if (req.method === "OPTIONS") {
-//     res.setHeader(
-//       "Access-Control-Allow-hEADER",
-//       "PUT, POST, PATCH, GET, DELETE,"
-//     );
-//     return res.status(200).json({});
-//   }
-
-//   next();
-// });
-
-// app.use("/auth", authRoute);
-// app.use("/users", usersRoute);
-
-// db.connection()
-//   .then(() => {
-//     app.listen(PORT, () => {
-//       console.log("listening for requests");
-//     });
-//   })
-//   .catch((err) => console.log("Database connection failed"));
 const dotenv = require("dotenv");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -66,18 +12,42 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
-// Wide-open CORS configuration (use cautiously)
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: false,
-  })
-);
-
-// Middleware
 app.use(express.json());
+
+const allowedOrigins = [
+  "https://ibom-mortgage-ui.fly.dev",
+  "https://profiling.ibommortgagebank.com/",
+  // "https://yourotherdomain.com",
+  "http://localhost:3000", // For local development
+  "http://localhost:3001", // For Vite/React development
+  "http://localhost:3002", // For Vite/React development
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+  ],
+  credentials: true, // Enable if you need cookies/authentication
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+
+// Wide-open CORS configuration (use cautiously)
+app.use(cors(corsOptions));
+
+
 app.use(morgan("tiny"));
 app.disable("x-powered-by");
 
