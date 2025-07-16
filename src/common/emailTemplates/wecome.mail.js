@@ -46,7 +46,7 @@ const welcomeTemplate = {
       </div>
       <div style="margin-top: 40px">
         Link:
-        <a style="color: #338330" href="https://ibom-mortgage-ui.fly.dev/home">
+        <a style="color: #338330" href="https://profiling.ibommortgagebank.com/home">
           Apply for Housing
         </a>
       </div>

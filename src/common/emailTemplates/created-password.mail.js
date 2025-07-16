@@ -44,7 +44,7 @@ const createPasswordTemplate = {
           border-radius: 10px;
           margin-top: 40px;
         "
-            href="https://ibom-mortgage-ui.fly.dev/create-password/${token}"
+            href="https://profiling.ibommortgagebank.com/create-password/${token}"
           >
             Verify My Account
           </a>

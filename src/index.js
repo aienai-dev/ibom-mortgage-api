@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  "https://ibom-mortgage-ui.fly.dev",
+  "https://profiling.ibommortgagebank.com",
   "https://profiling.ibommortgagebank.com/",
   // "https://yourotherdomain.com",
   "http://localhost:3000", // For local development
@@ -46,7 +46,6 @@ const corsOptions = {
 
 // Wide-open CORS configuration (use cautiously)
 app.use(cors(corsOptions));
-
 
 app.use(morgan("tiny"));
 app.disable("x-powered-by");
