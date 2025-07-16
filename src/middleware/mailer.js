@@ -58,7 +58,7 @@ const mailer = {
   sendWelcome: async (user, token) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <${process.env.ZOHO_EMAIL}>`,
+        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
         to: user.email,
         subject: "Thank You for Your Interest in Our Real Estate Platform!",
         html: template({
@@ -85,7 +85,7 @@ const mailer = {
   sendResetPassword: async (user, token) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <${process.env.ZOHO_EMAIL}>`,
+        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
         to: user.email,
         subject: "Don't remember your password?",
         html: template({
