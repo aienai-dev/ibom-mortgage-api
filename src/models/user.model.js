@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     whatsapp_number: {
       type: String,
       trim: true,
-      unique: true,
+      // unique: true,
     },
     age_range: {
       type: String,
@@ -57,7 +57,6 @@ const userSchema = new mongoose.Schema(
         values: ["employed", "self-employed", "unemployed", "retired"],
         message: "{VALUE} is not supported",
       },
-
       required: [true, "Employment status required"],
     },
     user_type: {

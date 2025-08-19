@@ -33,29 +33,6 @@ const uploadImage = multer({
   limits: { fieldSize: 1024 * 1024 * 3 },
 });
 
-// const productImageResize = async (req, file, next) => {
-//   if (req.files) return next();
-//   await Promise.all(
-//     req.files.map(async (file) => {
-//       await sharp(file.tempFilePath)
-//         .resize((300, 300).toFormat("jpeg"))
-//         .jpeg({ quality: 90 })
-//         .toFile(`public/images/products/${file.name}`);
-//     })
-//   );
-//   next();
-// };
-// const userImageResize = async (req, file, next) => {
-//   if (req.files) return next();
-//   await Promise.all(
-//     req.files.map(async (file) => {
-//       await sharp(file.tempFilePath)
-//         .resize((300, 300).toFormat("jpeg"))
-//         .jpeg({ quality: 90 })
-//         .toFile(`public/images/products/${file.name}`);
-//     })
-//   );
-//   next();
-// };
+
 
 module.exports = uploadImage;
