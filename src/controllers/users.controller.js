@@ -451,19 +451,33 @@ class UsersController {
       );
 
       const virtualAccount = data.data.data;
+      console.log(virtualAccount._id);
+      let payment;
 
-      let payment = new Payment({
-        user: req.user._id,
-        status: "Initiated",
-        amount: 20000,
-        account_id: virtualAccount._id,
-        reference: "",
-        transaction_id: "",
-        account_id: "",
-        metadata: { ...virtualAccount },
-      });
+      let existingPayment = await Payment.findOne({ user: req.user._id });
+      if (existingPayment) {
+        payment = await Payment.findByIdAndUpdate(
+          existingPayment._id,
+          {
+            account_id: virtualAccount._id,
+            reference: "",
+            transaction_id: "",
+          },
+          { new: true }
+        );
+      } else {
+        let newPayment = new Payment({
+          user: req.user._id,
+          status: "Initiated",
+          amount: 20000,
+          account_id: virtualAccount._id,
+          reference: "",
+          transaction_id: "",
+          metadata: { ...virtualAccount },
+        });
 
-      await payment.save();
+        payment = await newPayment.save();
+      }
 
       return res.status(200).json(
         helper.responseHandler({
@@ -499,7 +513,7 @@ class UsersController {
       }
 
       const payment = await Payment.findOne({
-        "metadata._id": data.virtualAccount,
+        account_id: data.virtualAccount,
       }).populate("user");
 
       if (!payment) {
