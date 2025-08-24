@@ -459,7 +459,7 @@ class UsersController {
         payment = await Payment.findByIdAndUpdate(
           existingPayment._id,
           {
-            account_id: virtualAccount._id,
+            account_id: virtualAccount._id.toString().trim(),
             reference: "",
             transaction_id: "",
           },
@@ -470,7 +470,7 @@ class UsersController {
           user: req.user._id,
           status: "Initiated",
           amount: 20000,
-          account_id: virtualAccount._id,
+          account_id: virtualAccount._id.toString().trim(),
           reference: "",
           transaction_id: "",
           metadata: { ...virtualAccount },
@@ -512,9 +512,9 @@ class UsersController {
         return res.status(400).json({ message: "Unsupported webhook type" });
       }
 
-        const payment = await Payment.findOne({
-          account_id: data.virtualAccount.toString().trim(),
-        }).populate("user");
+      const payment = await Payment.findOne({
+        account_id: data.virtualAccount.toString().trim(),
+      }).populate("user");
 
       if (!payment) {
         console.error(
