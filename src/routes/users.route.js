@@ -5,27 +5,38 @@ const uploadImage = require("../middleware/imageUpload");
 
 router.post(
   "/:user_id/compliance",
-  auth.user,
-  complianceController.createCompliance
+  (req, res, next) => auth.user(req, res, next),
+  (req, res, next) => complianceController.createCompliance(req, res, next)
+);
+// verify-payment
+
+router.get(
+  "/initiate-payment",
+  (req, res, next) => auth.user(req, res, next),
+  (req, res, next) => complianceController.initiatePayment(req, res, next)
+);
+router.post(
+  "/verify-payment",
+  (req, res, next) => complianceController.verifyPayment(req, res, next)
 );
 
 router.post(
   "/:compliance_id/:doc_type",
-  auth.user,
+  (req, res, next) => auth.user(req, res, next),
   uploadImage.array("image"),
-  complianceController.uploadImage
+  (req, res, next) => complianceController.uploadImage(req, res, next)
 );
 
 router.get(
   "/:user_id/compliance",
-  auth.user,
-  complianceController.getComplianceByUserId
+  (req, res, next) => auth.user(req, res, next),
+  (req, res, next) => complianceController.getComplianceByUserId(req, res, next)
 );
 
 router.put(
   "/:user_id/compliance/:compliance_id",
-  auth.user,
-  complianceController.updateCompliance
+  (req, res, next) => auth.user(req, res, next),
+  (req, res, next) => complianceController.updateCompliance()
 );
 
 module.exports = router;

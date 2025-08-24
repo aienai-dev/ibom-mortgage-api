@@ -1,12 +1,13 @@
+// This MUST be the first line of your application
 const dotenv = require("dotenv");
+dotenv.config();
+
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
 const db = require("./db/connection");
 const authRoute = require("./routes/auth.route");
 const usersRoute = require("./routes/users.route");
-
-dotenv.config();
 
 const PORT = process.env.PORT || 3010;
 

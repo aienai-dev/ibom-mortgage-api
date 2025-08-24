@@ -3,6 +3,7 @@
     "@elasticemail/elasticemail-client": "^4.0.23",
     "@getbrevo/brevo": "^2.2.0",
     "@sendgrid/mail": "^8.1.5",
+    "axios": "^1.11.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.4.0",
     "cors": "^2.8.5",

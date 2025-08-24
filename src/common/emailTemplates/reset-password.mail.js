@@ -1,7 +1,6 @@
 const resetPasswordTemplate = {
-  snippet: (user, token) =>
-    `
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  snippet: (user, token) => `
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -50,6 +49,12 @@ const resetPasswordTemplate = {
       line-height: 19.6px;
     }
     
+    .next-steps-title {
+      color: #030812;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
     .button-container {
       margin-top: 40px;
     }
@@ -79,6 +84,17 @@ const resetPasswordTemplate = {
         max-width: 150px;
         height: auto;
     }
+    
+    .footer-image-container {
+      padding-top: 44px;
+    }
+    
+    .footer-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 600px;
+    }
 
     @media screen and (max-width: 600px) {
       .container {
@@ -98,9 +114,8 @@ const resetPasswordTemplate = {
           <table class="container" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
             <!-- Logo Header Section -->
             <tr>
-              <td ">
-                <!-- Replace this placeholder with your actual logo image URL -->
-                <img class="logo-img"  src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1749817364/Screenshot_2025-06-12_at_14.02.54-removebg-preview_2_cqfmfv.png" alt="Ibom Mortgage Bank Logo" />
+              <td>
+                <img class="logo-img" src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1749817364/Screenshot_2025-06-12_at_14.02.54-removebg-preview_2_cqfmfv.png" alt="Ibom Mortgage Bank Logo" />
               </td>
             </tr>
             
@@ -111,11 +126,11 @@ const resetPasswordTemplate = {
                   <tr>
                     <td class="content-padding">
                       <span class="greeting">
-                        Hi ${user.first_name} 👋,
+                        Hello ${user.first_name} 👋,
                       </span>
                       <div style="margin-top: 14px;">
                         <p class="text-body">
-                          Don't remember your password?
+                          We received a request to reset the password for your account. If you did not make this request, you can safely ignore this email.
                         </p>
                       </div>
                     </td>
@@ -124,7 +139,7 @@ const resetPasswordTemplate = {
                     <td class="footer">
                       <div style="margin-top: 16px;">
                         <p class="text-body">
-                          Please click the button below to set up a new password.
+                          To reset your password, please click the button below. This link is only valid for 24 hours.
                         </p>
                       </div>
                       <div class="button-container">
@@ -134,12 +149,12 @@ const resetPasswordTemplate = {
                       </div>
                       <div style="margin-top: 44px;">
                         <p class="text-body">
-                          If you have any questions or need assistance, feel free to reach out to our support team at support@ibommortgage or call us at 1-800-123-4567.
+                          If you have any questions or need assistance, feel free to reach out to our support team at info@ibommortgagebank.com or call us at +234 908 897 8002.
                         </p>
                       </div>
                       <div style="margin-top: 16px;">
                         <p class="text-body">
-                          Thank you again for your interest. We look forward to helping you find your perfect home!
+                          Thank you for being a valued customer!
                         </p>
                       </div>
                     </td>
@@ -147,6 +162,14 @@ const resetPasswordTemplate = {
                 </table>
               </td>
             </tr>
+            
+            <!-- Footer Image -->
+            <tr>
+              <td>
+                <img class="footer-image" src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255584/Screenshot_2024-06-25_at_15.30.48_1_1_chlgqr.png" alt="Connect with us via our Social Media" />
+              </td>
+            </tr>
+            
           </table>
         </td>
       </tr>
@@ -154,7 +177,7 @@ const resetPasswordTemplate = {
   </center>
 </body>
 </html>
-  `,
+`,
 };
 
 module.exports = resetPasswordTemplate;

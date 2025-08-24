@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
     },
     account_status: {
       type: String,
-      default: 'unverified'
+      default: "unverified",
     },
     compliance_status: {
       type: String,
@@ -75,6 +75,33 @@ const userSchema = new mongoose.Schema(
       type: String,
       default:
         "https://res.cloudinary.com/fullstack-login-register/image/upload/v1666587424/AUTH/avatar_nqomfb.png",
+    },
+    referral: {
+      type: String,
+      default: null,
+    },
+    payment_details: {
+      status: {
+        type: String,
+        enum: {
+          values: ["paid", "unpaid"],
+          message: "{VALUE} is not supported",
+        },
+        default: "unpaid",
+      },
+      date: {
+        type: String,
+        default: null,
+      },
+      payment_id: {
+        type: String,
+        default: null,
+      },
+    },
+    metadata: {
+      type: Map,
+      of: String,
+      default: {},
     },
   },
   { timestamps: true }

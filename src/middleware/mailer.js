@@ -1,29 +1,30 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 const welcomeTemplate = require("../common/emailTemplates/wecome.mail");
 const createPasswordTemplate = require("../common/emailTemplates/created-password.mail");
 const resetPasswordTemplate = require("../common/emailTemplates/reset-password.mail");
+const receiptTemplate = require("../common/emailTemplates/receipt.mail");
 const template = require("../common/emailTemplates/template");
 
 // SMTP Configuration
 const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
+  host: "smtp.zoho.com",
   port: 465, // SSL port
   secure: true, // true for 465, false for other ports
   auth: {
-    user: 'hello@fhaestates.com', // Your Zoho email address (e.g., info@ibommortgage.com)
-    pass: 'fhamortgageDev@dev123' // Your Zoho email password or app-specific password
+    user: "hello@fhaestates.com", // Your Zoho email address (e.g., info@ibommortgage.com)
+    pass: "fhamortgageDev@dev123", // Your Zoho email password or app-specific password
   },
   tls: {
-    rejectUnauthorized: false // Only for testing, remove in production
-  }
+    rejectUnauthorized: false, // Only for testing, remove in production
+  },
 });
 
 // Verify SMTP connection on startup
 transporter.verify((error) => {
   if (error) {
-    console.error('SMTP connection error:', error);
+    console.error("SMTP connection error:", error);
   } else {
-    console.log('SMTP server is ready to send emails');
+    console.log("SMTP server is ready to send emails");
   }
 });
 
@@ -38,24 +39,24 @@ const mailer = {
           user,
           token,
           content: createPasswordTemplate,
-        })
+        }),
       };
 
       const info = await transporter.sendMail(mailOptions);
       return {
         status: "success",
-        messageId: info.messageId
+        messageId: info.messageId,
       };
     } catch (error) {
       console.error("Error sending create password email:", error);
       return {
         status: "failed",
-        error: error.message
+        error: error.message,
       };
     }
   },
 
-  sendWelcome: async (user, token) => {
+  sendWelcome: async (user) => {
     try {
       const mailOptions = {
         from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
@@ -63,21 +64,21 @@ const mailer = {
         subject: "Thank You for Your Interest in Our Real Estate Platform!",
         html: template({
           user,
-          token,
+          token: "",
           content: welcomeTemplate,
-        })
+        }),
       };
 
       const info = await transporter.sendMail(mailOptions);
       return {
         status: "success",
-        messageId: info.messageId
+        messageId: info.messageId,
       };
     } catch (error) {
       console.error("Error sending welcome email:", error);
       return {
         status: "failed",
-        error: error.message
+        error: error.message,
       };
     }
   },
@@ -92,22 +93,48 @@ const mailer = {
           user,
           token,
           content: resetPasswordTemplate,
-        })
+        }),
       };
 
       const info = await transporter.sendMail(mailOptions);
       return {
         status: "success",
-        messageId: info.messageId
+        messageId: info.messageId,
       };
     } catch (error) {
       console.error("Error sending reset password email:", error);
       return {
         status: "failed",
-        error: error.message
+        error: error.message,
       };
     }
-  }
+  },
+  sendReceiptEmail: async (user, details) => {
+    try {
+      const mailOptions = {
+        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        to: user.email,
+        subject: "Payment received",
+        html: template({
+          user,
+          token: details,
+          content: receiptTemplate,
+        }),
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId,
+      };
+    } catch (error) {
+      console.error("Error sending  receipt:", error);
+      return {
+        status: "failed",
+        error: error.message,
+      };
+    }
+  },
 };
 
 module.exports = mailer;

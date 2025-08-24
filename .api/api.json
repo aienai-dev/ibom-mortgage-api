@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "safehavenmfb",
+      "source": "@safehavenmfb/v1.0#19abmy1tlvi3h9sy",
+      "integrity": "sha512-PBE0qxO6ZSjCMRiQvajEWEIoFLoCjZb2r++6ScWXf0LsEfrEELUB8PhtgwgE7/+qjZQmh4FCg2oTy6A1wC7IGw==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}

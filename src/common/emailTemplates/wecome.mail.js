@@ -1,11 +1,12 @@
 const welcomeTemplate = {
-  snippet: (user) =>
-    ` <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  snippet: (user, token) =>
+    `
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Housing Application - Ibom Mortgage Bank</title>
+  <title>Welcome to Ibom Mortgage Bank</title>
   <style type="text/css">
     body {
       margin: 0;
@@ -48,24 +49,17 @@ const welcomeTemplate = {
       font-weight: 300;
       line-height: 19.6px;
     }
-
-    .heading {
+    
+    .next-steps-title {
       color: #030812;
       font-size: 14px;
       font-weight: 600;
     }
     
-    .list-item {
-      color: #475467;
-      font-size: 14px;
-      font-weight: 300;
-      line-height: 19.6px;
-    }
-
-    .content-area {
+    .footer {
       padding: 24px 27px;
     }
-    
+
     /* Logo Specific Styles */
     .logo-container {
         padding: 20px 0;
@@ -78,33 +72,22 @@ const welcomeTemplate = {
         height: auto;
     }
     
-    /* Footer Specific Styles */
-    .footer {
-        background-color: #f4f4f4;
-        padding: 24px 27px;
-        border-top: 1px solid #e0e0e0;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
-        text-align: center;
+    .footer-image-container {
+      padding-top: 44px;
     }
-
-    .footer-text {
-      font-size: 12px;
-      color: #475467;
-      line-height: 18px;
-    }
-
-    .footer-link {
-      color: #338330;
-      text-decoration: none;
-      font-weight: 500;
+    
+    .footer-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 600px;
     }
 
     @media screen and (max-width: 600px) {
       .container {
         border-radius: 0;
       }
-      .content-padding, .content-area, .footer {
+      .content-padding, .footer {
         padding: 20px 15px;
       }
     }
@@ -118,9 +101,8 @@ const welcomeTemplate = {
           <table class="container" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
             <!-- Logo Header Section -->
             <tr>
-               <td ">
-                <!-- Replace this placeholder with your actual logo image URL -->
-                <img class="logo-img"  src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1749817364/Screenshot_2025-06-12_at_14.02.54-removebg-preview_2_cqfmfv.png" alt="Ibom Mortgage Bank Logo" />
+              <td>
+                <img class="logo-img" src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1749817364/Screenshot_2025-06-12_at_14.02.54-removebg-preview_2_cqfmfv.png" alt="Ibom Mortgage Bank Logo" />
               </td>
             </tr>
             
@@ -131,57 +113,33 @@ const welcomeTemplate = {
                   <tr>
                     <td class="content-padding">
                       <span class="greeting">
-                        Hi ${user.first_name} 👋,
+                        Welcome to Ibom Mortgage Bank 👋,
                       </span>
                       <div style="margin-top: 14px;">
                         <p class="text-body">
-                          Thank you for showing interest in our real estate platform and submitting your basic information. We're excited to help you find your ideal home!
+                          Thank you for registering with us and for submitting your application. We're excited to have you on board!
                         </p>
                       </div>
                     </td>
                   </tr>
                   <tr>
-                    <td class="content-area">
-                      <div style="color: #030812; font-size: 14px; font-weight: 600">
-                        Next Steps
-                      </div>
+                    <td class="footer">
+                      <span class="next-steps-title">
+                        Application Status
+                      </span>
                       <div style="margin-top: 16px;">
                         <p class="text-body">
-                          To continue with your application process, we need to gather more detailed information. Please follow the link below to access your profile setup page, where you can provide additional details and preferences. Click the link 'Apply for Housing' to proceed.
+                          We have received your application and our team is currently reviewing it. You will receive an email notification as soon as we have an update on your application status.
                         </p>
-                      </div>
-                      <div style="margin-top: 40px;">
-                        <a href="https://profiling.ibommortgagebank.com/home" style="color: #338330; text-decoration: none; font-weight: 500;">
-                          Apply for Housing
-                        </a>
-                      </div>
-                      <div style="margin-top: 40px;">
-                        <p style="color: #030812; font-size: 14px; font-weight: 500; margin-bottom: 10px;">
-                          What to Expect
-                        </p>
-                        <ol style="margin: 0; padding: 0 0 0 20px; color: #475467;">
-                          <li style="margin-bottom: 10px; font-size: 14px; font-weight: 300;">
-                            Personal Information: Provide details about yourself and your household.
-                          </li>
-                          <li style="margin-bottom: 10px; font-size: 14px; font-weight: 300;">
-                            Financial Information: Share your financial background to help us find suitable housing options.
-                          </li>
-                          <li style="margin-bottom: 10px; font-size: 14px; font-weight: 300;">
-                            Housing Preferences: Let us know your preferred locations, housing types, and other preferences.
-                          </li>
-                          <li style="font-size: 14px; font-weight: 300;">
-                            Getting Started: Submit the form and await confirmation from our team.
-                          </li>
-                        </ol>
                       </div>
                       <div style="margin-top: 44px;">
                         <p class="text-body">
-                          If you have any questions or need assistance, feel free to reach out to our support team at support@ibommortgage or call us at 1-800-123-4567.
+                          If you have any questions or need assistance, feel free to reach out to our support team at info@ibommortgagebank.com or call us at +234 908 897 8002.
                         </p>
                       </div>
                       <div style="margin-top: 16px;">
                         <p class="text-body">
-                          Thank you again for your interest. We look forward to helping you find your perfect home!
+                          Thank you again for choosing Ibom Mortgage Bank. We look forward to serving you!
                         </p>
                       </div>
                     </td>
@@ -189,34 +147,14 @@ const welcomeTemplate = {
                 </table>
               </td>
             </tr>
-            <!-- Footer Section -->
+            
+            <!-- Footer Image -->
             <tr>
-              <td class="footer">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                  <tr>
-                    <td align="center" style="padding-bottom: 10px;">
-                      <a href="#" style="text-decoration: none;"><img src="https://placehold.co/24x24/FFFFFF/338330?text=F" alt="Facebook" style="width: 24px; height: 24px; margin: 0 5px;" /></a>
-                      <a href="#" style="text-decoration: none;"><img src="https://placehold.co/24x24/FFFFFF/338330?text=T" alt="Twitter" style="width: 24px; height: 24px; margin: 0 5px;" /></a>
-                      <a href="#" style="text-decoration: none;"><img src="https://placehold.co/24x24/FFFFFF/338330?text=I" alt="Instagram" style="width: 24px; height: 24px; margin: 0 5px;" /></a>
-                      <a href="#" style="text-decoration: none;"><img src="https://placehold.co/24x24/FFFFFF/338330?text=L" alt="LinkedIn" style="width: 24px; height: 24px; margin: 0 5px;" /></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="footer-text">
-                      <p>
-                        This email was sent from Ibom Mortgage Bank.<br/>
-                        &copy; 2024 Ibom Mortgage Bank. All rights reserved.
-                      </p>
-                      <p>
-                        <a href="#" class="footer-link">Privacy Policy</a> |
-                        <a href="#" class="footer-link">Terms of Service</a> |
-                        <a href="#" class="footer-link">Unsubscribe</a>
-                      </p>
-                    </td>
-                  </tr>
-                </table>
+              <td>
+                <img class="footer-image" src="http://googleusercontent.com/file_content/2" alt="Connect with us via our Social Media" />
               </td>
             </tr>
+            
           </table>
         </td>
       </tr>
@@ -224,7 +162,8 @@ const welcomeTemplate = {
   </center>
 </body>
 </html>
-`,
+
+  `,
 };
 
 module.exports = welcomeTemplate;
