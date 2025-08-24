@@ -512,9 +512,9 @@ class UsersController {
         return res.status(400).json({ message: "Unsupported webhook type" });
       }
 
-      const payment = await Payment.findOne({
-        account_id: data.virtualAccount,
-      }).populate("user");
+        const payment = await Payment.findOne({
+          account_id: data.virtualAccount.toString().trim(),
+        }).populate("user");
 
       if (!payment) {
         console.error(
