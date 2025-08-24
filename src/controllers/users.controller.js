@@ -499,7 +499,7 @@ class UsersController {
       }
 
       const payment = await Payment.findOne({
-        "metadata.account_id": data.virtualAccount,
+        "metadata._id": data.virtualAccount,
       }).populate("user");
 
       if (!payment) {
