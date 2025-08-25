@@ -277,10 +277,10 @@ class UsersController {
       }
 
       // Cleanup local file
-      files[0].path &&
-        fs.unlink(files[0].path, (err) => {
-          if (err) console.error("Error unlinking file:", err);
-        });
+      // files[0].path &&
+      //   fs.unlink(files[0].path, (err) => {
+      //     if (err) console.error("Error unlinking file:", err);
+      //   });
 
       let updateField;
       if (doc_type === "identity") {
@@ -624,7 +624,7 @@ class UsersController {
           payment_id: payment._id,
         },
       });
-      
+
       return res.status(200).json(
         helper.responseHandler({
           status: 200,
