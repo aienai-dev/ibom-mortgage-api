@@ -15,9 +15,13 @@ router.get(
   (req, res, next) => auth.user(req, res, next),
   (req, res, next) => complianceController.initiatePayment(req, res, next)
 );
-router.post(
-  "/verify-payment",
-  (req, res, next) => complianceController.verifyPayment(req, res, next)
+router.post("/verify-payment", (req, res, next) =>
+  complianceController.verifyPayment(req, res, next)
+);
+router.get(
+  "/validate-payment",
+  (req, res, next) => auth.user(req, res, next),
+  (req, res, next) => complianceController.validateUserPayment(req, res, next)
 );
 
 router.post(

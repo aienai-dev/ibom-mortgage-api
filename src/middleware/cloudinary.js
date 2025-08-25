@@ -16,7 +16,7 @@ const cloudUpload = async (path, filename) => {
     });
 
     fs.unlink(path, (err) => {
-      if (err) return;
+      if (err) return res
     });
     return res;
   } else {

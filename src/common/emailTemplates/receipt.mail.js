@@ -1,3 +1,4 @@
+const moment = require("moment");
 const receiptTemplate = {
   snippet: (user, details) =>
     `
@@ -168,7 +169,7 @@ const receiptTemplate = {
                           <tr>
                             <td class="receipt-item receipt-label">Date:</td>
                             <td class="receipt-item receipt-value">${
-                              details?.date || ""
+                              moment(details?.createdAt).format("LLLL") || ""
                             }</td>
                           </tr>
                           <tr>
@@ -186,7 +187,7 @@ const receiptTemplate = {
                           <tr>
                             <td class="receipt-item receipt-label">Account Number:</td>
                             <td class="receipt-item receipt-value">${
-                              details?.accountNumber || ""
+                              details?.debitAccountNumber || ""
                             }</td>
                           </tr>
                           <tr>
@@ -212,12 +213,12 @@ const receiptTemplate = {
                       </div>
                       <div class="button-container">
                         <a href="https://profiling.ibommortgagebank.com/login" class="button" style="color: #fff !important;">
-                          Go to My Dashboard
+                         View My Dashboard
                         </a>
                       </div>
                       <div style="margin-top: 44px;">
                         <p class="text-body">
-                          If you have any questions or need assistance, feel free to reach out to our support team at support@ibommortgage or call us at 1-800-123-4567.
+                          If you have any questions or need assistance, feel free to reach out to our support team at info@ibommortgagebank.com or call us at +234 908 897 8002.
                         </p>
                       </div>
                       <div style="margin-top: 16px;">

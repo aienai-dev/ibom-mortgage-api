@@ -1,6 +1,7 @@
 const helper = require("../middleware/helper");
 const User = require("../models/user.model");
 const Compliance = require("../models/compliance.model");
+const Payment = require("../models/payments.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mailer = require("../middleware/mailer");
@@ -486,7 +487,7 @@ class AuthController {
         );
       }
 
-      const user = await User.findOne({ email });
+      let user = await User.findOne({ email });
       if (!user) {
         return res.status(401).json(
           helper.responseHandler({
@@ -505,9 +506,27 @@ class AuthController {
           })
         );
       }
-      // const compliance = await Compliance.findOne({ user_id: user._id });
 
+      const hasPayment = await Payment.findOne({ user: user._id });
+      if (
+        hasPayment &&
+        hasPayment.status === "Completed" &&
+        user.payment_details.status !== "paid"
+      ) {
+        user = await User.findByIdAndUpdate(
+          user._id,
+          {
+            payment_details: {
+              status: "paid",
+              payment_id: hasPayment._id,
+              date: hasPayment.createdAt,
+            },
+          },
+          { new: true }
+        );
+      }
       const data = user.toObject();
+      
       const access_token = jwt.sign(
         { _id: data._id, email: data.email },
         process.env.ACCESS_TOKEN_SECRET,

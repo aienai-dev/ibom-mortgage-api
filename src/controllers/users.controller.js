@@ -452,11 +452,32 @@ class UsersController {
 
       const virtualAccount = data.data.data;
       console.log(virtualAccount._id);
-      let payment;
 
       let existingPayment = await Payment.findOne({ user: req.user._id });
       if (existingPayment) {
-        payment = await Payment.findByIdAndUpdate(
+        if (existingPayment.status === "Completed") {
+          await User.findByIdAndUpdate(req.user._id, {
+            payment_details: {
+              status: "paid",
+              date: existingPayment.createdAt,
+              payment_id: existingPayment._id,
+            },
+          });
+          return res.status(200).json(
+            helper.responseHandler({
+              status: 200,
+              data: {
+                message: "Payment Received",
+                payment_details: {
+                  status: "paid",
+                  date: existingPayment.createdAt,
+                  payment_id: existingPayment._id,
+                },
+              },
+            })
+          );
+        }
+        await Payment.findByIdAndUpdate(
           existingPayment._id,
           {
             account_id: virtualAccount._id.toString().trim(),
@@ -476,7 +497,7 @@ class UsersController {
           metadata: { ...virtualAccount },
         });
 
-        payment = await newPayment.save();
+        await newPayment.save();
       }
 
       return res.status(200).json(
@@ -511,9 +532,10 @@ class UsersController {
         console.warn(`Received unsupported webhook type: ${type}`);
         return res.status(400).json({ message: "Unsupported webhook type" });
       }
+      let account_id = data.virtualAccount;
 
       const payment = await Payment.findOne({
-        account_id: data.virtualAccount.toString().trim(),
+        account_id: account_id,
       }).populate("user");
 
       if (!payment) {
@@ -541,6 +563,7 @@ class UsersController {
           },
           { new: true }
         );
+
         await User.findByIdAndUpdate(
           payment.user._id,
           {
@@ -552,6 +575,7 @@ class UsersController {
           },
           { new: true }
         );
+
         await mailer.sendReceiptEmail(payment.user, data);
         console.log(
           `Payment for account ${data.virtualAccount} successfully completed.`
@@ -571,6 +595,57 @@ class UsersController {
       }
     } catch (err) {}
   }
+  validateUserPayment = async (req, res) => {
+    try {
+      const payment = await Payment.findOne({ user: req.user._id });
+      if (!payment) {
+        return res
+          .status(404)
+          .json(
+            helper.responseHandler({ status: 404, error: err.message || err })
+          );
+      }
+
+      if (payment.status !== "Completed") {
+        return res.status(200).json(
+          helper.responseHandler({
+            status: 200,
+            data: {
+              message: "not received",
+            },
+          })
+        );
+      }
+
+      await User.findByIdAndUpdate(req.user._id, {
+        payment_details: {
+          status: "paid",
+          date: payment.createdAt,
+          payment_id: payment._id,
+        },
+      });
+      
+      return res.status(200).json(
+        helper.responseHandler({
+          status: 200,
+          data: {
+            message: "Payment Received",
+            payment_details: {
+              status: "paid",
+              date: payment.createdAt,
+              payment_id: payment._id,
+            },
+          },
+        })
+      );
+    } catch (err) {
+      return res
+        .status(500)
+        .json(
+          helper.responseHandler({ status: 500, error: err.message || err })
+        );
+    }
+  };
 }
 
 module.exports = new UsersController();
