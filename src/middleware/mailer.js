@@ -3,6 +3,7 @@ const welcomeTemplate = require("../common/emailTemplates/wecome.mail");
 const createPasswordTemplate = require("../common/emailTemplates/created-password.mail");
 const resetPasswordTemplate = require("../common/emailTemplates/reset-password.mail");
 const receiptTemplate = require("../common/emailTemplates/receipt.mail");
+const regTemplate = require("../common/emailTemplates/registration.mail");
 const template = require("../common/emailTemplates/template");
 
 // SMTP Configuration
@@ -119,6 +120,32 @@ const mailer = {
           user,
           token: details,
           content: receiptTemplate,
+        }),
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId,
+      };
+    } catch (error) {
+      console.error("Error sending  receipt:", error);
+      return {
+        status: "failed",
+        error: error.message,
+      };
+    }
+  },
+  sendRegistrationEmail: async (user) => {
+    try {
+      const mailOptions = {
+        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        to: user.email,
+        subject: "Registration Successful",
+        html: template({
+          user,
+          token: "",
+          content: regTemplate,
         }),
       };
 
