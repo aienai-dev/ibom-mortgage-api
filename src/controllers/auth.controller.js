@@ -233,7 +233,7 @@ class AuthController {
         process.env.ACCESS_TOKEN_SECRET
       );
 
-      const mail = await mailer.sendWelcome(data, access_token);
+      const mail = await mailer.sendRegistrationEmail(data, access_token);
       if (mail && mail.status === "failed") {
         return res.status(412).json(
           helper.responseHandler({
@@ -526,7 +526,7 @@ class AuthController {
         );
       }
       const data = user.toObject();
-      
+
       const access_token = jwt.sign(
         { _id: data._id, email: data.email },
         process.env.ACCESS_TOKEN_SECRET,

@@ -93,7 +93,7 @@ class UsersController {
         { new: true }
       );
 
-      await mailer.sendRegistrationEmail(user);
+      await mailer.sendWelcome(user);
 
       return res.status(200).json(
         helper.responseHandler({
