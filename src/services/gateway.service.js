@@ -6,7 +6,7 @@ const clientAssertion = process.env.SAFEHAVEN_CLIENT_ASSERTION;
 const assertionType = process.env.SAFEHAVEN_ASSERTION_TYPE;
 const safehaven_clientId = process.env.SAFEHAVEN_CLIENT_ID;
 
-const wema_base_url = process.env.WEMA_BASE_URL + "bank-transfer/api/v1";
+const wema_base_url = process.env.WEMA_BASE_URL + "/bank-transfer/api/v1";
 const wema_business_id = process.env.WEMA_BUSINESS_ID;
 const wema_api_key = process.env.WEMA_API_KEY;
 const wema_api_key_2 = process.env.WEMA_API_KEY_2;
@@ -63,6 +63,7 @@ const GatewayService = {
 
   generateWemaVirtualAccount: async (customer) => {
     try {
+      console.log(wema_api_key, customer);
       const res = await axios.post(
         `${wema_base_url}/bankTransfer/virtualAccount`,
         {

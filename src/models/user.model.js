@@ -74,7 +74,7 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
       default:
-        "https://res.cloudinary.com/fullstack-login-register/image/upload/v1666587424/AUTH/avatar_nqomfb.png",
+        "https://res.cloudinary.com/fullstack-login-register/image/upload/v1756274276/Frame_1707479020_aotbwe.svg",
     },
     referral: {
       type: String,
