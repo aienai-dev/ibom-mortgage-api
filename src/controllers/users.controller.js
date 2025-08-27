@@ -7,14 +7,9 @@ const fs = require("fs");
 const cloudinary = require("../middleware/cloudinary");
 const axios = require("axios");
 const mailer = require("../middleware/mailer");
+const PaymentService = require("../services/gateway.service");
 
 class UsersController {
-  constructor() {
-    this.baseUrl = process.env.SAFEHAVEN_BASE_URL;
-    this.clientAssertion = process.env.SAFEHAVEN_CLIENT_ASSERTION;
-    this.assertionType = process.env.SAFEHAVEN_ASSERTION_TYPE;
-    this.clientId = process.env.SAFEHAVEN_CLIENT_ID;
-  }
   access_token = "";
   refresh_token = "";
 
@@ -398,62 +393,28 @@ class UsersController {
     }
   }
 
-  // Method to generate an access token
-  async generateAccessToken() {
-    try {
-      const res = await axios.post(`${this.baseUrl}/oauth2/token`, {
-        grant_type: "client_credentials",
-        client_assertion_type: this.assertionType,
-        client_assertion: this.clientAssertion,
-        client_id: this.clientId,
-      });
-      return res.data;
-    } catch (err) {
-      console.error(err.response ? err.response.data : err.message);
-      return {};
-    }
-  }
-
   async initiatePayment(req, res) {
     try {
-      const token = await this.generateAccessToken();
+      // const service = PaymentService.getSafeHavenVirtualAccount();
+      const user = await User.findById(req.user._id);
 
-      if (!token || Object.keys(token).length === 0) {
-        return res.status(422).json(
+      const service = await PaymentService.generateWemaVirtualAccount(user);
+
+      if (service.error) {
+        return res.status(400).json(
           helper.responseHandler({
-            status: 422,
-            error: "Failed to generate access token.",
+            status: 400,
+            error: `Error: ${service.error}`,
           })
         );
       }
-      this.refresh_token = token.refresh_token;
-      this.access_token = token.access_token;
 
-      const data = await axios.post(
-        this.baseUrl + "/virtual-accounts",
-        {
-          validFor: 900,
-          settlementAccount: {
-            bankCode: "999240",
-            accountNumber: "0113976036",
-          },
-          amountControl: "Fixed",
-          amount: 20000,
-          callbackUrl: "https://ibom-mortgage-api.fly.dev/users/verify-payment",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + this.access_token,
-            "Content-Type": "application/json",
-            ClientID: this.clientId,
-          },
-        }
-      );
+      const virtualAccount = service.data;
 
-      const virtualAccount = data.data.data;
-      console.log(virtualAccount._id);
+      console.log("Account generated", virtualAccount.id);
 
-      let existingPayment = await Payment.findOne({ user: req.user._id });
+      let existingPayment = await Payment.findOne({ user: user._id });
+
       if (existingPayment) {
         if (existingPayment.status === "Completed") {
           await User.findByIdAndUpdate(req.user._id, {
@@ -480,20 +441,21 @@ class UsersController {
         await Payment.findByIdAndUpdate(
           existingPayment._id,
           {
-            account_id: virtualAccount._id.toString().trim(),
+            account_id: virtualAccount.id,
             reference: "",
-            transaction_id: "",
+            transaction_id: virtualAccount.transactionId,
+            metadata: { ...virtualAccount },
           },
           { new: true }
         );
       } else {
         let newPayment = new Payment({
-          user: req.user._id,
+          user: user._id,
           status: "Initiated",
           amount: 20000,
-          account_id: virtualAccount._id.toString().trim(),
+          account_id: virtualAccount.id,
           reference: "",
-          transaction_id: "",
+          transaction_id: virtualAccount.transactionId,
           metadata: { ...virtualAccount },
         });
 
@@ -504,10 +466,10 @@ class UsersController {
         helper.responseHandler({
           status: 200,
           data: {
-            accountNumber: virtualAccount.accountNumber,
-            accountName: virtualAccount.accountName,
-            currencyCode: virtualAccount.currencyCode,
-            bankName: "Safehaven MFB",
+            accountNumber: virtualAccount.virtualBankAccountNumber,
+            accountName: "Ibom Mortgage Bank LTD",
+            currencyCode: "NGN",
+            bankName: "WEMA BANK",
             amount: 20000,
           },
         })
@@ -595,9 +557,11 @@ class UsersController {
       }
     } catch (err) {}
   }
+
   validateUserPayment = async (req, res) => {
     try {
       const payment = await Payment.findOne({ user: req.user._id });
+
       if (!payment) {
         return res
           .status(404)
@@ -606,12 +570,36 @@ class UsersController {
           );
       }
 
-      if (payment.status !== "Completed") {
+      if (payment.status === "Completed") {
+        await User.findByIdAndUpdate(req.user._id, {
+          payment_details: {
+            status: "paid",
+            date: payment.createdAt,
+            payment_id: payment._id,
+          },
+        });
         return res.status(200).json(
           helper.responseHandler({
             status: 200,
             data: {
-              message: "not received",
+              message: "Payment Received",
+            },
+          })
+        );
+      }
+
+      const virtualPayment =
+        await PaymentService.validateWemaVirtualAccountTransaction(
+          payment.transaction_id,
+          payment.metadata.virtualBankAccountNumber
+        );
+
+      if (virtualPayment.status !== "completed") {
+        return res.status(200).json(
+          helper.responseHandler({
+            status: 200,
+            data: {
+              message: "Payment Pending",
             },
           })
         );
@@ -620,9 +608,16 @@ class UsersController {
       await User.findByIdAndUpdate(req.user._id, {
         payment_details: {
           status: "paid",
-          date: payment.createdAt,
+          date: payment.updatedAt,
           payment_id: payment._id,
         },
+      });
+
+      await Payment.findByIdAndUpdate(payment._id, {
+        status: "Completed",
+        reference: virtualPayment.sessionId,
+        transaction_id: virtualPayment.transactionId,
+        metadata: virtualPayment,
       });
 
       return res.status(200).json(
@@ -632,7 +627,7 @@ class UsersController {
             message: "Payment Received",
             payment_details: {
               status: "paid",
-              date: payment.createdAt,
+              date: payment.updatedAt,
               payment_id: payment._id,
             },
           },

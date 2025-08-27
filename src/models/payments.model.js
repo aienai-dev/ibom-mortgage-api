@@ -29,6 +29,11 @@ const paymentSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    provider: {
+      type: String,
+      enum: ["WEMA", "SAFEHAVEN"],
+      default: "WEMA",
+    },
     metadata: {
       type: mongoose.Schema.Types.Mixed,
       default: {},
