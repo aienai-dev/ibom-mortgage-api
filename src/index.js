@@ -9,7 +9,7 @@ const db = require("./db/connection");
 const authRoute = require("./routes/auth.route");
 const usersRoute = require("./routes/users.route");
 
-const PORT = process.env.PORT || 3020;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
