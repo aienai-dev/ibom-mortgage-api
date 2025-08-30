@@ -438,13 +438,62 @@ class UsersController {
             })
           );
         }
+        const virtualPayment =
+          await PaymentService.validateWemaVirtualAccountTransaction(
+            existingPayment.transaction_id,
+            existingPayment.metadata.virtualBankAccountNumber
+          );
+
+        if (virtualPayment.status === "completed") {
+          await Payment.findByIdAndUpdate(
+            existingPayment._id,
+            {
+              status: "Completed",
+              reference: virtualPayment.sessionId,
+              transaction_id: virtualPayment.transactionId,
+              metadata: {
+                ...virtualPayment,
+                virtualBankAccountNumber:
+                  existingPayment.metadata.virtualBankAccountNumber,
+              },
+            },
+            { new: true }
+          );
+
+          await User.findByIdAndUpdate(req.user._id, {
+            payment_details: {
+              status: "paid",
+              date: existingPayment.createdAt,
+              payment_id: existingPayment._id,
+            },
+          });
+
+          return res.status(200).json(
+            helper.responseHandler({
+              status: 200,
+              data: {
+                message: "Payment Received",
+                payment_details: {
+                  status: "paid",
+                  date: existingPayment.createdAt,
+                  payment_id: existingPayment._id,
+                },
+              },
+            })
+          );
+        }
+
         await Payment.findByIdAndUpdate(
           existingPayment._id,
           {
             account_id: virtualAccount.id,
             reference: "",
             transaction_id: virtualAccount.transactionId,
-            metadata: { ...virtualAccount },
+            metadata: {
+              ...virtualAccount,
+              virtualBankAccountNumber:
+                existingPayment.metadata.virtualBankAccountNumber,
+            },
           },
           { new: true }
         );
@@ -457,6 +506,14 @@ class UsersController {
           reference: "",
           transaction_id: virtualAccount.transactionId,
           metadata: { ...virtualAccount },
+        });
+
+        await User.findByIdAndUpdate(req.user._id, {
+          payment_details: {
+            status: "unpaid",
+            date: newPayment.createdAt,
+            payment_id: newPayment._id,
+          },
         });
 
         await newPayment.save();
@@ -617,7 +674,11 @@ class UsersController {
         status: "Completed",
         reference: virtualPayment.sessionId,
         transaction_id: virtualPayment.transactionId,
-        metadata: virtualPayment,
+        metadata: {
+          ...virtualPayment,
+          virtualBankAccountNumber:
+            virtualPayment.metadata.virtualBankAccountNumber,
+        },
       });
 
       return res.status(200).json(

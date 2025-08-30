@@ -199,7 +199,7 @@ class AuthController {
       }
       console.log(user);
       const dbUser = await User.findOne({ email: user.email });
-      console.log();
+      // console.log();
       if (!dbUser) {
         return res.status(404).json(
           helper.responseHandler({
