@@ -444,15 +444,15 @@ class UsersController {
             existingPayment.metadata.virtualBankAccountNumber
           );
 
-        if (virtualPayment.status === "completed") {
+        if (virtualPayment.data.status === "completed") {
           await Payment.findByIdAndUpdate(
             existingPayment._id,
             {
               status: "Completed",
-              reference: virtualPayment.sessionId,
-              transaction_id: virtualPayment.transactionId,
+              reference: virtualPayment.data.sessionId,
+              transaction_id: virtualPayment.data.transactionId,
               metadata: {
-                ...virtualPayment,
+                ...virtualPayment.data,
                 virtualBankAccountNumber:
                   existingPayment.metadata.virtualBankAccountNumber,
               },
@@ -491,8 +491,7 @@ class UsersController {
             transaction_id: virtualAccount.transactionId,
             metadata: {
               ...virtualAccount,
-              virtualBankAccountNumber:
-                existingPayment.metadata.virtualBankAccountNumber,
+              virtualBankAccountNumber: virtualAccount.virtualBankAccountNumber,
             },
           },
           { new: true }
@@ -650,8 +649,8 @@ class UsersController {
           payment.transaction_id,
           payment.metadata.virtualBankAccountNumber
         );
-
-      if (virtualPayment.status !== "completed") {
+      console.log(virtualPayment);
+      if (virtualPayment?.data?.status !== "completed") {
         return res.status(200).json(
           helper.responseHandler({
             status: 200,
@@ -661,7 +660,7 @@ class UsersController {
           })
         );
       }
-
+      console.log(virtualPayment.data.status);
       await User.findByIdAndUpdate(req.user._id, {
         payment_details: {
           status: "paid",
@@ -672,12 +671,11 @@ class UsersController {
 
       await Payment.findByIdAndUpdate(payment._id, {
         status: "Completed",
-        reference: virtualPayment.sessionId,
-        transaction_id: virtualPayment.transactionId,
+        reference: virtualPayment.data.sessionId,
+        transaction_id: virtualPayment.data.transactionId,
         metadata: {
-          ...virtualPayment,
-          virtualBankAccountNumber:
-            virtualPayment.metadata.virtualBankAccountNumber,
+          ...virtualPayment.data,
+          virtualBankAccountNumber: payment.metadata.virtualBankAccountNumber,
         },
       });
 
