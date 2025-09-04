@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       default: null,
+      select: false,
     },
     employment_status: {
       type: String,

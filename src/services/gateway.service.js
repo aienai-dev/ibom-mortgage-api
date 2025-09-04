@@ -45,6 +45,7 @@ const GatewayService = {
           amountControl: "Fixed",
           amount: 20000,
           callbackUrl: "https://ibom-mortgage-api.fly.dev/users/verify-payment",
+       
         },
         {
           headers: {

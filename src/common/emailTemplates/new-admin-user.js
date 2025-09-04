@@ -1,11 +1,11 @@
-const resetPasswordTemplate = {
-  snippet: (user, token) => `
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+const createAdminPasswordTemplate = {
+  snippet: (user, token) =>
+    `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Password Reset - Ibom Mortgage Bank</title>
+  <title>Account Verification - Ibom Mortgage Bank</title>
   <style type="text/css">
     body {
       margin: 0;
@@ -126,50 +126,36 @@ const resetPasswordTemplate = {
                   <tr>
                     <td class="content-padding">
                       <span class="greeting">
-                        Hello ${user.first_name} 👋,
+                        Hi ${user.first_name} 👋,
                       </span>
                       <div style="margin-top: 14px;">
                         <p class="text-body">
-                          We received a request to reset the password for your account. If you did not make this request, you can safely ignore this email.
+                          You have been invited to be an administrator on Ibom Mortgage Console
                         </p>
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <td class="footer">
+                      <span class="next-steps-title">
+                        Next Steps
+                      </span>
                       <div style="margin-top: 16px;">
                         <p class="text-body">
-                          To reset your password, please click the button below. This link is only valid for 1 hour.
+                          To complete your registration, please verify your account.
                         </p>
                       </div>
                       <div class="button-container">
-                        <a href="https://profiling.ibommortgagebank.com/reset-password/${token}" class="button" style="color: #fff !important;">
-                          Reset My Password
+                        <a href="https://console.ibommortgagebank.com/create-password/${token}" class="button" style="color: #fff !important;">
+                          Verify My Account
                         </a>
                       </div>
-                      <div style="margin-top: 44px;">
-                        <p class="text-body">
-                          If you have any questions or need assistance, feel free to reach out to our support team at info@ibommortgagebank.com or call us at +234 908 897 8002.
-                        </p>
-                      </div>
-                      <div style="margin-top: 16px;">
-                        <p class="text-body">
-                          Thank you for being a valued customer!
-                        </p>
-                      </div>
+                      
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
-            
-            <!-- Footer Image -->
-            <tr>
-              <td>
-                <img class="footer-image" src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255584/Screenshot_2024-06-25_at_15.30.48_1_1_chlgqr.png" alt="Connect with us via our Social Media" />
-              </td>
-            </tr>
-            
           </table>
         </td>
       </tr>
@@ -180,4 +166,4 @@ const resetPasswordTemplate = {
 `,
 };
 
-module.exports = resetPasswordTemplate;
+module.exports = createAdminPasswordTemplate;

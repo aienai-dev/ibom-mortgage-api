@@ -143,7 +143,7 @@ const resetPasswordTemplate = {
                         </p>
                       </div>
                       <div class="button-container">
-                        <a href="https://profiling.ibommortgagebank.com/reset-password/${token}" class="button" style="color: #fff !important;">
+                        <a href="https://console.ibommortgagebank.com/reset-password/${token}" class="button" style="color: #fff !important;">
                           Reset My Password
                         </a>
                       </div>
@@ -152,24 +152,14 @@ const resetPasswordTemplate = {
                           If you have any questions or need assistance, feel free to reach out to our support team at info@ibommortgagebank.com or call us at +234 908 897 8002.
                         </p>
                       </div>
-                      <div style="margin-top: 16px;">
-                        <p class="text-body">
-                          Thank you for being a valued customer!
-                        </p>
-                      </div>
+                     
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
             
-            <!-- Footer Image -->
-            <tr>
-              <td>
-                <img class="footer-image" src="https://res.cloudinary.com/fullstack-login-register/image/upload/v1723255584/Screenshot_2024-06-25_at_15.30.48_1_1_chlgqr.png" alt="Connect with us via our Social Media" />
-              </td>
-            </tr>
-            
+         
           </table>
         </td>
       </tr>

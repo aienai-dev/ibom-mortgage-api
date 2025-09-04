@@ -1,6 +1,7 @@
 const helper = require("../middleware/helper");
 const User = require("../models/user.model");
-const Compliance = require("../models/compliance.model");
+// const Compliance = require("../models/compliance.model");
+const Admin = require("../models/admin.model");
 const Payment = require("../models/payments.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -277,6 +278,121 @@ class AuthController {
     }
   }
 
+  async createAdminPassword(req, res) {
+    try {
+      const { auth } = req.body;
+      if (!auth) {
+        return res.status(400).json(
+          helper.responseHandler({
+            status: 400,
+            error: `User data is required`,
+          })
+        );
+      }
+
+      const hasEmptyFields = helper.fieldValidator({
+        password: auth.password,
+        confirm_password: auth.confirm_password,
+        reg_token: auth.reg_token,
+      });
+
+      if (hasEmptyFields.length > 0) {
+        return res.status(400).json(
+          helper.responseHandler({
+            status: 400,
+            error: `${hasEmptyFields.join(", ")} ${
+              hasEmptyFields.length > 1 ? "are" : "is"
+            } required`,
+          })
+        );
+      }
+
+      const user = jwt.verify(
+        auth.reg_token,
+        process.env.ADMIN_REGISTRATION_TOKEN_SECRET
+      );
+
+      console.log(user);
+
+      if (!user) {
+        return res.status(401).json(
+          helper.responseHandler({
+            status: 401,
+            error: "Contact support",
+          })
+        );
+      }
+
+      if (auth.password !== auth.confirm_password) {
+        return res.status(400).json(
+          helper.responseHandler({
+            status: 400,
+            error: "Passwords do not match",
+          })
+        );
+      }
+      console.log(user);
+      const dbUser = await Admin.findOne({ email: user.email });
+      // console.log();
+      if (!dbUser) {
+        return res.status(404).json(
+          helper.responseHandler({
+            status: 404,
+            error: "Account not found, contact support",
+          })
+        );
+      }
+
+      if (dbUser.status === "verified") {
+        return res.status(405).json(
+          helper.responseHandler({
+            status: 405,
+            error: "User already verified, contact support or reset password",
+          })
+        );
+      }
+
+      const hashedPassword = await bcrypt.hash(auth.password, 12);
+
+      const newUserData = await Admin.findOneAndUpdate(
+        { email: user.email },
+        { password: hashedPassword, status: "verified" },
+        { new: true }
+      );
+
+      const data = newUserData.toObject();
+      delete data.password;
+      const access_token = jwt.sign(
+        { _id: data._id, email: data.email },
+        process.env.ADMIN_ACCESS_TOKEN_SECRET
+      );
+
+      return res.status(200).json(
+        helper.responseHandler({
+          status: 200,
+          data: {
+            user: {
+              _id: data._id,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              email: data.email,
+              role: data.role,
+              status: data.status,
+            },
+            access_token: access_token,
+          },
+        })
+      );
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json(
+          helper.responseHandler({ status: 500, error: err.message || err })
+        );
+    }
+  }
+
   async forgotPassword(req, res) {
     try {
       const { auth } = req.body;
@@ -310,7 +426,12 @@ class AuthController {
         );
       }
 
-      const dbUser = await User.findOne({ email: auth.email });
+      let dbUser;
+
+      if (auth.role && auth.role === "admin")
+        dbUser = await Admin.findOne({ email: auth.email });
+      else dbUser = await User.findOne({ email: auth.email });
+
       if (!dbUser) {
         return res.status(404).json(
           helper.responseHandler({
@@ -319,12 +440,14 @@ class AuthController {
           })
         );
       }
+      let env =
+        auth.role && auth.role === "admin"
+          ? process.env.ADMIN_RESET_TOKEN_SECRET
+          : process.env.RESET_TOKEN_SECRET;
 
-      const reset_token = jwt.sign(
-        { email: dbUser.email },
-        process.env.RESET_TOKEN_SECRET,
-        { expiresIn: "1h" }
-      );
+      const reset_token = jwt.sign({ email: dbUser.email }, env, {
+        expiresIn: "1h",
+      });
 
       const mail = await mailer.sendResetPassword(dbUser, reset_token);
       if (mail && mail.status === "failed") {
@@ -382,8 +505,14 @@ class AuthController {
           })
         );
       }
+      let user;
+      if (auth.role && auth.role === "admin")
+        user = jwt.verify(
+          auth.reset_token,
+          process.env.ADMIN_RESET_TOKEN_SECRET
+        );
+      else user = jwt.verify(auth.reset_token, process.env.RESET_TOKEN_SECRET);
 
-      const user = jwt.verify(auth.reset_token, process.env.RESET_TOKEN_SECRET);
       if (!user) {
         return res.status(401).json(
           helper.responseHandler({
@@ -401,8 +530,11 @@ class AuthController {
           })
         );
       }
+      let dbUser;
+      if (auth.role && auth.role === "admin")
+        dbUser = await Admin.findOne({ email: user.email });
+      else dbUser = await User.findOne({ email: user.email });
 
-      const dbUser = await User.findOne({ email: user.email });
       if (!dbUser) {
         return res.status(404).json(
           helper.responseHandler({
@@ -413,26 +545,41 @@ class AuthController {
       }
 
       const hashedPassword = await bcrypt.hash(auth.password, 12);
-
-      const newUserData = await User.findOneAndUpdate(
-        { email: user.email },
-        { password: hashedPassword, account_status: "verified" },
-        { new: true }
-      );
+      let newUserData;
+      if (auth.role && auth.role === "admin")
+        newUserData = await Admin.findOneAndUpdate(
+          { email: user.email },
+          { password: hashedPassword, status: "verified" },
+          { new: true }
+        );
+      else
+        newUserData = await User.findOneAndUpdate(
+          { email: user.email },
+          { password: hashedPassword, account_status: "verified" },
+          { new: true }
+        );
 
       const data = newUserData.toObject();
       delete data.password;
       const access_token = jwt.sign(
         { _id: data._id, email: data.email },
-        process.env.ACCESS_TOKEN_SECRET,
+        auth.role && auth.role === "admin"
+          ? process.env.ADMIN_ACCESS_TOKEN_SECRET
+          : process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "1d" }
       );
 
-      return res.status(200).json(
-        helper.responseHandler({
-          status: 200,
-          data: {
-            user: {
+      let obj =
+        auth.role && auth.role === "admin"
+          ? {
+              _id: data._id,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              email: data.email,
+              role: data.role,
+              status: data.status,
+            }
+          : {
               _id: data._id,
               first_name: data.first_name,
               last_name: data.last_name,
@@ -447,6 +594,14 @@ class AuthController {
               image: data.image,
               created_at: data.createdAt,
               updated_at: data.updatedAt,
+            };
+
+      return res.status(200).json(
+        helper.responseHandler({
+          status: 200,
+          data: {
+            user: {
+              ...obj,
             },
             access_token: access_token,
           },
@@ -487,7 +642,7 @@ class AuthController {
         );
       }
 
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ email }).select("+password");
       if (!user) {
         return res.status(401).json(
           helper.responseHandler({
@@ -553,6 +708,93 @@ class AuthController {
               created_at: data.createdAt,
               updated_at: data.updatedAt,
               payment_details: data.payment_details,
+            },
+            access_token: access_token,
+          },
+        })
+      );
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json(
+          helper.responseHandler({ status: 500, error: err.message || err })
+        );
+    }
+  }
+  async adminLogin(req, res) {
+    try {
+      const { email, password } = req.body;
+      const hasEmptyFields = helper.fieldValidator({ email, password });
+
+      if (hasEmptyFields.length > 0) {
+        return res.status(400).json(
+          helper.responseHandler({
+            status: 400,
+            error: `${hasEmptyFields.join(", ")} ${
+              hasEmptyFields.length > 1 ? "are" : "is"
+            } required`,
+          })
+        );
+      }
+
+      if (!helper.validateEmail(email)) {
+        return res.status(400).json(
+          helper.responseHandler({
+            status: 400,
+            error: `Email is invalid`,
+          })
+        );
+      }
+
+      let user = await Admin.findOne({ email }).select("+password");
+      if (!user) {
+        return res.status(401).json(
+          helper.responseHandler({
+            status: 401,
+            error: `Invalid email or password`,
+          })
+        );
+      }
+
+      if (user.is_deleted) {
+        return res.status(401).json(
+          helper.responseHandler({
+            status: 401,
+            error: `User unauthorized`,
+          })
+        );
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json(
+          helper.responseHandler({
+            status: 401,
+            error: `Invalid email or password`,
+          })
+        );
+      }
+
+      const data = user.toObject();
+
+      const access_token = jwt.sign(
+        { _id: data._id, email: data.email },
+        process.env.ADMIN_ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+
+      return res.status(200).json(
+        helper.responseHandler({
+          status: 200,
+          data: {
+            user: {
+              _id: data._id,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              email: data.email,
+              role: data.role,
+              status: data.status,
             },
             access_token: access_token,
           },

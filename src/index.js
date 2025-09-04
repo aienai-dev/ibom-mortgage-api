@@ -8,8 +8,13 @@ const express = require("express");
 const db = require("./db/connection");
 const authRoute = require("./routes/auth.route");
 const usersRoute = require("./routes/users.route");
+const paymentsRoute = require("./routes/payments.routes");
+const applicationsRoute = require("./routes/applications.routes");
+const adminUserRoute = require("./routes/admin.routes");
+const analyticsRoutes = require("./routes/analytics.route");
+const referralsRoute = require("./routes/referral.route");
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3020;
 
 const app = express();
 
@@ -18,7 +23,7 @@ app.use(express.json());
 const allowedOrigins = [
   "https://profiling.ibommortgagebank.com",
   "https://profiling.ibommortgagebank.com/",
-  // "https://yourotherdomain.com",
+  "http://localhost:5173",
   "http://localhost:3000", // For local development
   "http://localhost:3001", // For Vite/React development
   "http://localhost:3002", // For Vite/React development
@@ -72,6 +77,11 @@ app.use((req, res, next) => {
 // Routes
 app.use("/auth", authRoute);
 app.use("/users", usersRoute);
+app.use("/admin", adminUserRoute);
+app.use("/payments", paymentsRoute);
+app.use("/analytics", analyticsRoutes);
+app.use("/applications", applicationsRoute);
+app.use("/referrals", referralsRoute);
 
 // Health check
 app.get("/", (req, res) => {

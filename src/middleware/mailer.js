@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const welcomeTemplate = require("../common/emailTemplates/wecome.mail");
 const createPasswordTemplate = require("../common/emailTemplates/created-password.mail");
+const createAdminPasswordTemplate = require("../common/emailTemplates/new-admin-user");
 const resetPasswordTemplate = require("../common/emailTemplates/reset-password.mail");
 const receiptTemplate = require("../common/emailTemplates/receipt.mail");
 const regTemplate = require("../common/emailTemplates/registration.mail");
@@ -9,8 +10,8 @@ const template = require("../common/emailTemplates/template");
 // SMTP Configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
-  port: 465, // SSL port
-  secure: true, // true for 465, false for other ports
+  port: 587, // SSL port
+  secure: false, // true for 465, false for other ports
   auth: {
     user: "hello@fhaestates.com", // Your Zoho email address (e.g., info@ibommortgage.com)
     pass: "fhamortgageDev@dev123", // Your Zoho email password or app-specific password
@@ -40,6 +41,33 @@ const mailer = {
           user,
           token,
           content: createPasswordTemplate,
+        }),
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      return {
+        status: "success",
+        messageId: info.messageId,
+      };
+    } catch (error) {
+      console.error("Error sending create password email:", error);
+      return {
+        status: "failed",
+        error: error.message,
+      };
+    }
+  },
+
+  sendAdminCreatePassword: async (user, token) => {
+    try {
+      const mailOptions = {
+        from: `"Admin Invite" <hello@fhaestates.com>`,
+        to: user.email,
+        subject: `Welcome ${user.first_name} 👋, Let's get you started!`,
+        html: template({
+          user,
+          token,
+          content: createAdminPasswordTemplate,
         }),
       };
 
