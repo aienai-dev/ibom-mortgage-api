@@ -10,11 +10,11 @@ const template = require("../common/emailTemplates/template");
 // SMTP Configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
-  port: 22, // SSL port
+  port: 587, // SSL port
   secure: false, // true for 465, false for other ports
   auth: {
-    user: "hello@fhaestates.com", // Your Zoho email address (e.g., info@ibommortgage.com)
-    pass: "fhamortgageDev@dev123", // Your Zoho email password or app-specific password
+    user: "noreply@ibommortgagebank.com", // Your Zoho email address (e.g., info@ibommortgage.com)
+    pass: "Housingmail@123", // Your Zoho email password or app-specific password
   },
   tls: {
     rejectUnauthorized: false, // Only for testing, remove in production
@@ -34,7 +34,7 @@ const mailer = {
   sendCreatePassword: async (user, token) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        from: `"Ibom Mortgage Initiative" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: `Welcome ${user.first_name} 👋, Let's get you started!`,
         html: template({
@@ -61,7 +61,7 @@ const mailer = {
   sendAdminCreatePassword: async (user, token) => {
     try {
       const mailOptions = {
-        from: `"Admin Invite" <hello@fhaestates.com>`,
+        from: `"Admin Invite" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: `Welcome ${user.first_name} 👋, Let's get you started!`,
         html: template({
@@ -88,7 +88,7 @@ const mailer = {
   sendWelcome: async (user) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        from: `"Ibom Mortgage Initiative" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: "Thank You for Your Interest in Our Real Estate Platform!",
         html: template({
@@ -115,7 +115,7 @@ const mailer = {
   sendResetPassword: async (user, token) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        from: `"Ibom Mortgage Initiative" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: "Don't remember your password?",
         html: template({
@@ -141,7 +141,7 @@ const mailer = {
   sendReceiptEmail: async (user, details) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        from: `"Ibom Mortgage Initiative" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: "Payment received",
         html: template({
@@ -167,7 +167,7 @@ const mailer = {
   sendRegistrationEmail: async (user) => {
     try {
       const mailOptions = {
-        from: `"Ibom Mortgage Initiative" <hello@fhaestates.com>`,
+        from: `"Ibom Mortgage Initiative" <noreply@ibommortgagebank.com>`,
         to: user.email,
         subject: "Registration Successful",
         html: template({
