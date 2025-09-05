@@ -10,7 +10,7 @@ const template = require("../common/emailTemplates/template");
 // SMTP Configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
-  port: 587, // SSL port
+  port: 22, // SSL port
   secure: false, // true for 465, false for other ports
   auth: {
     user: "hello@fhaestates.com", // Your Zoho email address (e.g., info@ibommortgage.com)
